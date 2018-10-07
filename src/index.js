@@ -22,11 +22,29 @@ const createProtoMagicObject = () => {
   magic.prototype = magic.__proto__; // eslint-disable-line
   return magic;
 };
-const incrementor = () => {
 
+const incrementor = () => {
+  if (!this.count) {
+    this.count = 0;
+  }
+  this.count += 1;
+  incrementor.valueOf = () => this.count;
+  return incrementor;
 };
-const asyncIncrementor = () => {};
-const createIncrementer = () => {};
+const asyncIncrementor = () => {
+  if (!this.asyncCount) {
+    this.asyncCount = 0;
+  }
+  this.asyncCount += 1;
+  return new Promise(resolve => resolve(this.asyncCount));
+};
+
+function* createIncrementer() {
+  let count = 0;
+  while (true) {
+    yield count += 1;
+  }
+}
 
 // return same argument not earlier than in one second, and not later, than in two
 const returnBackInSecond = param => new Promise((resolve, reject) => {
